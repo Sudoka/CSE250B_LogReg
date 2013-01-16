@@ -13,3 +13,14 @@
 3. Design of experiments
 4. Results of experiments
 5. Findings and lessons learned
+
+
+### Figure 3
+#### Caption
+The test error rate of various algorithms on six datasets (left to right, top: Long-Servedio, Mease-Wyner, Mushroom; bottom: USPS-N, Adult, Web) with and without 10% label noise. All algorithms are initialized with θ = 0. The blue (light) bar denotes a clean dataset while the magenta (dark) bar are the results with label noise added. Also see Table 3 in the supplementary material.
+
+#### Key points
+* analysizes six datasets: Long-Servedio, Mease-Wyner, Mushroom, USPS-N, Adult, Web
+* plot shows test error (%) with and without 10% label noise
+* all algorithms initalized with theta=0
+* only need to present results using logistic regression (not t-logistic or SVM)
