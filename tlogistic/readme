@@ -1,0 +1,23 @@
+This is the code for the algorithm "t-logistic regression". 
+
+[1] Nan Ding, S.V.N. Vishwanathan "t-logistic Regression", Advances in Neural Information Processing Systems 2010.  
+
+
+m-file list for the algorithm: 
+
+tlogistic_train.m  		% training t-logistic regression
+tlogistic_test.m		% test t-logistic regression
+exp_t.m				% compute exp_t
+t_Loss_EM.m			% estimate z_n, used in \xi-step
+t_Lossgrad_EM.m			% objective function and the gradient in the \theta-step
+
+The L-BFGS algorithm in \theta-step is by applying the MinFunc Matlab package (Mark Schmidt, 2006). 
+
+
+The experiments that we put in the paper can be found in ~/examples/. 
+
+e.g.
+test_[data_name].m     		% test error using 10-fold cross validation
+test_[data_name]_xi.m		% plot the \xi plots
+test_[data_name]_init.m		% test error with 50 different initialization of \theta
+
