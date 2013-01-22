@@ -46,17 +46,31 @@ High life next level post-ironic cupidatat selvage, pour-over tousled Austin eu 
 \section{DESIGN AND ANALYSIS OF ALGORITHMS}
 \label{sec:algorithms}
 
-Deserunt high life single-origin coffee hella. Laboris nulla nihil shoreditch anim deep v. Artisan occaecat fap banh mi beard reprehenderit. Eiusmod ullamco put a bird on it, wes anderson street art blog velit salvia marfa ad pinterest banksy dolor. Single-origin coffee etsy veniam anim, fixie freegan elit stumptown eu scenester kale chips. Art party +1 godard, meh typewriter ethical sriracha fugiat. Fashion axe small batch meh food truck, farm-to-table art party flannel swag.
+Real-valued features and binary labels (Bernoulli distribution).
 
 
 \subsection{L2 REGULARIZATION}
+\begin{equation}
+    \hat{B} = \textrm{argmax}_{\beta} LCL - \mu||\beta||_2^2
+\end{equation}
+where $||\beta||_2^2$ is the $L_2$ norm of the parameter vector.
+
+
+\begin{equation}
+    \frac{\partial}{\partial \beta_j} LCL = \sum_i (y_i - p_i)x_{ij}
+\end{equation}
 
 
 \subsection{STOCHASTIC GRADIENT DESCENT}
+The update rule is
+\begin{equation}
+    \beta_j := \beta_j + \lambda (y-p)x_j
+\end{equation}
 
 
 \subsection{LIMITED-MEMORY BFGS}
-
+Limited-memory Broyden-Fletcher-Goldfarb-Shannon (L-BFGS) is a quasi-Newton
+optimization method used to find local extrema.
 
 
 %-----------------------------------------------------------------------------
