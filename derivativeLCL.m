@@ -1,5 +1,5 @@
 function meanDLCL = derivativeLCL(x, y, B)
-%DERIVATIVELCL Calculate derivative of LCL.
+%DERIVATIVELCL Calculate derivative of LCL with respect to B.
 %
 % Inputs:
 %   x = features (matrix)

@@ -32,7 +32,7 @@ addpath('minFunc');
 
 
 %% Run L-BFGS
-x = minFunc(@(B)derivativeLCL(x,y,B),B0,options);
+x = minFunc(fhandle,B0,options);
 
 
 %% Plot results
