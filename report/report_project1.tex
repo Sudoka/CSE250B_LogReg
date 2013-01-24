@@ -35,15 +35,9 @@ University of California, San Diego \\
 \maketitle
 
 
-%\begin{abstract}
-%The abstract still needs to be written. It should provide a brief summary of the studied problem and our methods. Also, it state our results with a concise explanation of their meaning (good and/or bad).
-%\end{abstract}
-
-
-% Headings:
-%   Section: all caps (e.g. FIRST)
-%   Subsection: all caps (e.g. SECOND)
-%   Subsubsection: initial caps (e.g. Third)
+\begin{abstract}
+Logistic Regression with L$_2$ Regularization is analyzed as a classification learning method for data sets with real-valued features and binary labels. Stochastic Gradient Descent (SGD) and Limited-memory BFGS (L-BFGS) are used to find the regression parameters such that the Log Conditional Likelihood is maximized. The methods are applied to two common data sets: USPS-N (images of hand-written digits) and Web (statistics on HTML web pages). For the USPS-N data set, SGD had a (lower/equal/higher) test error than L-BFGS (xxx vs xxx) while for the Web data set, blah. These results indicate that blah blah blah about the two gradient methods as well as blah about logistic regression.
+\end{abstract}
 
 
 
@@ -57,7 +51,7 @@ Machine Learning (ML) is a sub-discipline of Artificial Intelligence (AI) that f
 
 ML algorithms are plentiful in number, but some are more suitable than others depending on the type of problem. Logistic regression is a ML algorithm well-suited to problems involving a set of real-valued inputs and a binary (Bernoulli) output. A real-world example of such a problem is whether a baseball player will hit a home run based on a collection of statistics (e.g. batting average, height, weight). The statistics are the real-valued inputs, whether he hits a home run is the binary output (1=yes, 0=no), and the probability of whether a player hits a home run is the determined using logistic regression. 
 
-In this paper we analyze logistic regressions capability for classification learning using a previously study as a baseline \cite{t-logistic}. Aside from recreating the previous study's results, we also extend their work to comparing two gradient-based optimization methods for use in conjuction with the logistic regression: Stochastic Gradient Descent (SGD) and Limited-memory Broyden-Fletcher-Goldfarb-Shannon (L-BFGS).
+In this paper we analyze logistic regression's capability for classification learning using a previously study as a baseline \cite{t-logistic}. Aside from recreating the previous study's results, we also extend their work to comparing two gradient-based optimization methods for use in conjuction with the logistic regression: Stochastic Gradient Descent (SGD) and Limited-memory Broyden-Fletcher-Goldfarb-Shannon (L-BFGS).
 
 
 
