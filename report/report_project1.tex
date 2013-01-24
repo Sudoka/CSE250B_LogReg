@@ -24,7 +24,10 @@
 
 \title{Logistic Regression with L$_2$ Regularization}
 
-\author{Adrian Guthals, David Larson, Jason Yao \\
+\author{Adrian Guthals (aguthals@cs.ucsd.edu),\\
+David Larson (dplarson@ucsd.edu),\\
+Jason Yao (j6yao@ucsd.edu)\\
+\\
 CSE 250B: Project \#1 \\
 University of California, San Diego \\
 }
@@ -61,79 +64,42 @@ In this paper we analyze logistic regression's capability for classification lea
 \section{Design and Analysis of Algorithms}
 \label{sec:algorithms}
 
-\subsection{Logistic Regression}
-Given a set of real-valued features $x$ with binary labels $y$ (a training set), we can define logistic regression model as: 
-\begin{equation}
-    p_i = p( y_i | x_i ; \beta )  = \frac{1}{1 + \textrm{exp}-[\sum_{j=0}^d \beta_j x_ij]}
-\end{equation}
-where $d$ is the dimensionality of a training example, and $\beta_j$ are parameters of the regression. To learn the logistic regression, we need deteremine $\vec\beta$ such that the Log Conditional Likelihood (LCL) is maximized. In more formal notation:
-\begin{equation}
-   \widehat{B} = \textrm{argmax}_{\beta} \textrm{LCL}
-\end{equation}
-where LCL is defined as:
-\begin{equation}
-    \textrm{LCL} = \sum_{i:y_i=1} log (p_i) + \sum_{i:y_i=0} log (1-p_i)
-\end{equation}
-and is maximized when its derivative with respect to each parameter $\beta_j$ is zero. For a single example the partial derivative of the LCL is:
-\begin{equation}
-    \frac{\partial}{\partial \beta_j} log L(\beta ; x, y) = (y - p) x_j
+Stochastic Gradient Descent (SGD) and Limited-memory Broyden-Fletcher-Goldfarb-Shannon (L-BFGS) were each implemented in Matlab to maximize the total conditional log likelihood of each training data set. In brief, SGD incorporated a fixed learning rate $\lambda$ to control the change in log likelihood, which was averaged over random mini-batches of size $\kappa$. To control over-fitting, logistic regression was used and change in the objective function was evaluated on a random subset of size $\gamma$. Convergence was reached when change in the objective function was less than $\omega$. Our L-BFGS implementation used the the minFunc \cite{minFunc} software package to converge on the maximum likelihood with the supplied objective \ref{LBFGS_obj} and gradient \ref{LBFGS_grad} functions.
+
+For each of these algorithms, the input training data is formatted as a set of $n$ examples $x_i \ldots x_n$ where each $x_j$ is a real-valued vector of $d$ features. Each $x_i$ is correlated to a binary (Bernoulli) outcome $y_i$ by a global parameter vector $\beta$ of length $d+1$. We assume this correlation follows the model below where $x_{i0}=1$ for all $i$.
+
+\begin{equation}\label{p}
+    p_i = p(y_i|x_i;\beta) = \frac{1}{1+\exp-(\sum_{j=0}^{d} \beta_j\,x_{ij})}
 \end{equation}
 
-
-\subsection{L$_2$ Regularization}
-In order to prevent overfitting of machine learning, a penalty was imposed to regulate the values of the parameters. A regularization constant $\mu$ was introduced into the LCL objective function:
-
-\begin{equation}
-    \hat{B} = \textrm{argmax}_{\beta} LCL - \mu||\beta||_2^2
-\end{equation}
-where $||\beta||_2^2$ is the $L_2$ norm of the parameter vector. With this revision the derivative of the LCL becomes:
-
-\begin{equation}
-    \frac{\partial}{\partial \beta_j} [ log p( y | x ; \beta) -\mu \sum_{j=0}^d \beta_j^2 ] = (y - p) x_j - 2 \mu \beta_j
-\end{equation}
-
-
-\subsection{Gradient-Based Optimization}
-To efficiently maximize LCL, two gradient-based optimization methods are used: SGD and L-BFGS. The SGD was coded from scratched in Matlab while we used the popular minFunc toolbox \cite{minFunc} for the L-BFGS. For each of these algorithms, the input training data is formatted as a set of $n$ examples ($x_1, \ldots , x_n$) where each $x_i$ is a real-valued vector of $d$ features. Each $x_i$ is correlated to a binary (Bernoulli) outcome $y_i$ by a global parameter vector $\beta$ of length $d+1$. 
 
 
 \subsubsection{SGD} 
-Our SGD implementation first randomized the order of input examples to avoid repeated computation of random numbers and partitioned the input data into $x_1 \ldots x_k$ \emph{training} examples and $x_{k+1} \ldots x_n$ \emph{validation} examples. Then sequential mini-batches of size $\kappa < k$ taken from the training set were used to update the parameter vector $\beta$ (initialized to all zero values) by the following equation. The constant $\mu$ quantifies the trade-off between maximizing likelihood and minimizing parameter values for $L_2$ Regularization. The update rule for $\beta$ is:
+Our SGD implementation first randomized the order of input examples to avoid repeated computation of random numbers and selected a subset of examples $x_1 \ldots x_{\gamma}$ for checking convergence of the objective function. Then sequential mini-batches of size $\kappa < n$ taken from the training set were used to update the parameter vector $\beta$ (initialized to all zero values) by the following equation. The constant $\mu$ quantifies the trade-off between maximizing likelihood and minimizing parameter values for $L_2$ Regularization.
 
-\begin{equation}
-    \beta := \beta + \frac{\lambda}{\kappa}\,[-2 \mu \beta + \sum_{i=1}^{\kappa} (y_i - p_i) x_i]
+\begin{equation}\label{SGD_grad}
+    \beta = \beta + \lambda [-2 \mu \beta + \frac{1}{\kappa}\sum_{i=1}^{\kappa}{(y_i - p_i)\,x_i}]
 \end{equation}
 
-After each update of $\beta$, absolute change in the objective $\widehat{\beta}$ was computed over all validation examples with the following function.
+After each update of $\beta$, absolute change in the objective $\widehat{\beta}$ was computed over a constant subset of examples with the following function.
 
-\begin{equation}
-    \widehat{\beta} = \mu \|\beta\|^2 + \sum_{i=k+1}^{n}{-\log(p_i^{y_i}(1 - p_i)^{1-y_i})}
+\begin{equation}\label{SGD_obj}
+    \widehat{\beta} = \mu \|\beta\|_2 - \sum_{i=1}^{\gamma}{\log(p_i^{y_i}(1 - p_i)^{1-y_i})}
 \end{equation}
 
-Convergence was reached when change in the objective reached a value less than $\omega$. Convergence was also reached if the total number of epochs was greater than $\varepsilon$. With this configuration, the time to run the SGD is O(nd).
+Convergence was reached when change in the objective was less than $\omega$. With this configuration, the time to run the SGD is $O(\kappa\,d + \gamma\,d)$ per iteration and can be sufficiently less than $O(nd)$ (for large datasets) when $\kappa$ and $\gamma$ are properly set. If the training set is small enough to allow one epoch per iteration, one can set $\kappa = \gamma = n$ to yield a running time  of $O(nd)$.
 
-To improve the performance of the SGD, cross-validation was added. The pseudo-code for SGD with cross-validation is as follows:
-\begin{enumerate}
-    \item Initialize all parameter values $\beta_j$
-    \item Initialize all conditional probabilities $p_i$
-    \item Initialize the objective function and its difference value
-    \item Randomly divide the example set into two groups: testing set of m rows and validation set of (n-m) rows
-    \item while(objective function difference $\geq$ theshold AND number of epochs $<$ maximum epochs allowed
-    \begin{enumerate}
-        \item Randomly pick a sample of s rows out of the testing set
-        \item Update $\beta_j$ for all features
-        \item Update the objective function
-    \end{enumerate}
-\end{enumerate}
 
-The algorithm was run ten times to generate 10 vectors of parameters. The ten vectors of parameters were averaged to calculate one vector (10-fold cross-validation). The result cross-validated vector was used to calculate the test error and its variance over all the instances. The test error was defined as the average value of the loss function:
-\begin{equation}
-        \textrm{test error} = \sum_{i=1}^{n} -log(y_i | x_i ; \beta )
+\subsection{Limited-memory BFGS}
+Limited-memory Broyden-Fletcher-Goldfarb-Shannon (L-BFGS) is a quasi-Newton optimization method used to find local extrema. It approximates the Hessian matrix of second derivatives using rank-one updates of the first derivatives and uses these gradients to converge on the set of hyperparameters that yield a first-order gradient of zero. minFunc is a popular Matlab implementation of L-BFGS (among other methods) that was also used in \cite{t-logistic}. To recreate the results in \cite{t-logistic}, we supplied minFunc with the following objective and gradient functions and an initial $\beta$ vector of zero values. Convergence was reached when change in the objective was less than $\omega$.
+
+\begin{equation}\label{LBFGS_grad}
+    \frac{\partial}{\partial \beta_j}LCL = \mu \|\beta\|_2 - \sum_{i=1}^{n}{(y_i - p_i)\,x_i}
 \end{equation}
 
-
-\subsubsection{L-BFGS}
-Limited-memory Broyden-Fletcher-Goldfarb-Shannon (L-BFGS) is a quasi-Newton optimization method used to find local extrema. L-BFGS provides performance gains over Newton's method by approximating (instead of solving directly) the Hessian matrix of the objective function.
+\begin{equation}\label{LBFGS_obj}
+    LCL = -2 \mu \beta - \sum_{i=1}^{n}{\log(p_i^{y_i}(1 - p_i)^{1-y_i})}
+\end{equation}
 
 
 
@@ -143,32 +109,22 @@ Limited-memory Broyden-Fletcher-Goldfarb-Shannon (L-BFGS) is a quasi-Newton opti
 \section{Design of Experiments}
 \label{sec:experiments}
 
-We apply logistic regression to two training data sets:
-\begin{enumerate}
-    \item USPS-N: images of hand-written digits as 256-dimensional vectors \cite{USPS}
-    \item Web: statistics on HTML web pages \cite{Web}
-\end{enumerate}
+Logistic regression models from SGD and L-BFGS were separately trained on the Web and USPS-N datasets mentioned in \cite{t-logistic}. For USPS-N, we only trained prediction models for digit 9 vs. all others. All $x_{ij}$ feature values were normalized to $[0,1]$ and all $y_i$ were converted to binary $0/1$ values. 30\% of each dataset was randomly selected and separated out as a validation set and the remaining 70\% was used for 10-fold cross validation. The optimal parameters $\lambda, \kappa, \gamma, \mu$ for SGD and $\mu$ for L-BFGS were chosen by grid search over the parameter space $\{10^{-4},10^{-3},...,10^{3}\}$ and observing the prediction accuracy over the validation set. Certain parameter combinations for SGD that increased the running time to over 30 minutes on a Quad-Core 3.2 GHz CPU (32 Gb RAM) were omitted. Although each dataset contained few enough examples to set $\kappa$ and $\gamma$ equal to $n$ for SGD convergence, we chose to set them to $10^{3}$ to limit the time required to run SGD repeatedly for 10-fold cross validation. The convergence criterion $\omega$ was set to $10^{-4}$ as in \cite{t-logistic}. Since L-BFGS uses the objective gradient to automatically update $\lambda$, we allowed minFunc to use the default initial $\lambda_0 = 1$. The following table details the hyperparameters that were learned for each data set.
 
-
-\subsection{Pre-Processing Training Data}
-
-\subsubsection{USPS-N}
-The USPS-N data set consists of 10 tables, where each table has features and labels for one digit. We are only interested in digit 9 for this study, so we concat all 10 tables together into one training set, set the labels for all examples for digit 9 to 1 and set the labels for all other examples to 0 (i.e. only examples from digit 9 have positive labels). Also, features of this data set are RGB color values and so we normalize all features relative to the max RGB value (255).
-
-\subsubsection{Web}
-The Web data set has features with binary values, which are compatible with logistic regression. The only pre-processing required for the Web data set was removal of non-essential characters (e.g. colons).
-
-
-\subsection{Hyperparameters}
-
-\subsubsection{Learning Rate}
-SGD uses a fixed learning rate $\lambda$ to control the change the change in LCL. We ran the SGD method using a range of $\lambda$ values over a 10\% subset of each training data set, using the test error of the SGD as a metric for determining which $\lambda$ is optimal. The optimal $\lambda$ for the USPS-N and Web training data sets was YYY and YYY.
-
-\subsubsection{Regularization}
-Once we determined an optimal $\lambda$, we tried a range of $\mu$ values with a randomly selected 30\% subset of each training data set. We selected $\mu$ such that the test error was minimized, which was YYY and YYY for the USPS-N and Web training data sets.
-
-\subsubsection{Convergence}
-Convergence was reached when change in the objective function was less than $\omega$ or the total number of epochs was greater than $\varepsilon$ (which ever came first)
+\begin{table}[htb!]
+%\small
+%\footnotesize
+\centering
+\begin{tabular}{lcccccc}
+& \multicolumn{4}{c}{SGD} & & L-BFGS\\
+\cline{2-5}
+\cline{7-7}
+ & $\lambda$ & $\kappa$ & $\gamma$ & $\mu$ & & $\mu$\\
+USPS-N & $10^{-1}$ & $10^{3}$ & $10^{3}$ & $10^{-4}$ & & $10^{0}$\\
+Web & $10^{-1}$ & $10^{3}$ & $10^{3}$ & $10^{-4}$ & & $10^{0}$\\
+\end{tabular}
+\caption{Hyperparameters.}
+\end{table}
 
 
 
@@ -178,41 +134,16 @@ Convergence was reached when change in the objective function was less than $\om
 \section{Results of Experiments}
 \label{sec:results}
 
-Results of experiments. Comparison of methods and data sets.
-
-\subsection{USPS-N}
-How did SGD and L-BFGS perform on the USPS-N data sets.
-
-\subsection{WEB}
-How did SGD and L-BFGS perform on the Web data sets.
-
-
-
-
-\begin{table}[t]
-\caption{Comparison of hyperparameters of SGD and their test error. $\lambda$ was evaluated using a 10\% subset of each training set with a fixed value of $\mu$ and the optimal $\lambda$ was chosen such that the test error was minimized. Once $\lambda$ was chosen, $\mu$ was varied to determine the $\mu$ that minimizes the test error.}
-\label{tab-hyperparameters}
-\begin{center}
-\begin{tabular}{l|ll}
-Training Set & $\lambda$  & $\mu$
-\\ \hline \\
-USPS-N & 1.0  & 1.0 \\
-USPS-N & 1.0  & 1.0 \\
-USPS-N & 1.0  & 1.0 \\
-Web & 1.0  & 1.0 \\
-Web & 1.0  & 1.0 \\
-Web & 1.0  & 1.0 \\
-\end{tabular}
-\end{center}
-\end{table}
-
+Figure \ref{fig:test_error} shows that logistic regression with SGD had a higher test error percentage than L-BFGS for both the USPS-N (5.32$\pm$3.23 vs 3.21$\pm$0.9) and Web data sets (8.75$\pm$4.3 vs 5.45$\pm$1.4). These results are reasonable considering that SGD only takes in a random subset of examples at a time and updates the parameters according to the subset. Thus, even when the SGD converges according to criteria, the overall objective function may or may not be reach the local extrema. The L-BFGS method is more thorough than SGD is in the fact that L-BFGS update the parameters based on the entire training set at a time. L-BFGS also considers the second derivative of the parameter functions in addition to the gradient.   
 
 \begin{figure}[h]
 \begin{center}
     \includegraphics[width=1.0\textwidth]{test_error.pdf}
-    \caption{Comparison of test error from SGD (gray solid) and L-BFGS (light gray with hatches) for USPS-N and Web data sets. The error bars are $\pm$ one standard deviation.}
+    \caption{Comparison of test error percentage for SGD (gray solid) and L-BFGS (white hatched), where the error bars are $\pm$ one standard deviation.}
+    \label{fig:test_error}
 \end{center}
 \end{figure}
+
 
 
 %-----------------------------------------------------------------------------
@@ -221,7 +152,9 @@ Web & 1.0  & 1.0 \\
 \section{Findings and Lessons Learned}
 \label{sec:conclusion}
 
-Findings and lessons learned.
+The issue of overfitting was especially relevant when training with L-BFGS. For all $\mu \leq 10^{-3}$, resulting $\beta$ parameters yielded extremely low error ($<$ 1\%) on the training data but infinite error on the validation set. Inspection of the $\beta$ values showed that they were extremely high in magnitude ($\pm 30$) compared to SGD-trained $\beta$ parameters ($\pm 2$). It was only after applying higher $\mu$ values that the magnitude of $\beta$ parameters was sufficiently reduced to yield appropriate cross-validated error. This suggests that training with L-BFGS should only be done with some regularization (we performed $L_2$ Regularization) and cross-validation of the trained models to protect against overfitting.
+
+Although the simplified form is SGD uses minibatches of size 1, we found that larger minibatches better approxmated the true gradient and led to tighter convergence (lower T-error). While developing the SGD algorithm it also became evident that convergence was reached much faster when the set of $\gamma$ examples used to evaluate change in the objective function was constant over all iterations. At first we used the same minibatch of $\kappa$ examples (that was used to approximate the gradient) to also approximate change in the objective function. Although larger minibatches better approximate the objective, disjoint minibatchs never impose the exact same objective given the same set of $\beta$ parameters. Thus, the algorithm could not converge on a single set of optimum $\beta$ parameters as iterations progressed because it would frequently jump from one maximum to another. Although this approach failed to make use of all the training data when evaluating the objective, it allowed for tighter convergence around some local maximum without scanning all training data in each iteration. It is important to mention that 10-fold cross validation helped protect against over-fitting to a single $\gamma$-size subset because $\beta$ parameters were averaged over multiple executions of SGD (examples were randomly re-ordered prior to each training).
 
 
 
