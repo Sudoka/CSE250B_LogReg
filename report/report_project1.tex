@@ -31,9 +31,12 @@ University of California, San Diego \\
 \section{INTRODUCTION}
 \label{sec:intro}
 
-This paper will attempt to recreate the results by \cite{t-logistic}.
+Machine Learning (ML) is a sub-discipline of Artificial Intelligence (AI) that focuses on the development and analysis of methods that produce models from data. An often referenced example application of ML is email spam filtering, but there is a wide variety of real-world problems where ML has been successful used, from object detection using a Microsoft Kinect sensor \cite{Kinect} to forecasting of power output from a photovoltaic solar farm \cite{solar}.
 
-Highlight what Logistic Regression, why is it used and where is it used (real-world applications). Also mention potential pitfalls of the method (e.g. overfitting).
+ML algorithms are plentiful in number, but some are more suitable than others depending on the type of problem. Logistic regression is a ML algorithm well-suited to problems involving a set of real-valued inputs and a binary (Bernoulli) output. A real-world example of such a problem is whether a baseball player will hit a home run based on a collection of statistics (e.g. batting average, height, weight). The statistics are the real-valued inputs, whether he hits a home run is the binary output (1=yes, 0=no), and the probability of whether a player hits a home run is the determined using logistic regression. 
+
+In this paper we analyze logistic regressions capability for classification learning using a previously study as a baseline \cite{t-logistic}. Aside from recreating the previous study's results, we also extend their work to comparing two gradient-based optimization methods for use in conjuction with the logistic regression.
+
 
 
 %-----------------------------------------------------------------------------
