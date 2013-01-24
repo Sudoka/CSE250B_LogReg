@@ -36,7 +36,7 @@ The Abstract must be limited to one paragraph.
 
 This paper will attempt to recreate the results by \cite{t-logistic}.
 
-
+Highlight what Logistic Regression, why is it used and where is it used (real-world applications). Also mention potential pitfalls of the method (e.g. overfitting).
 
 
 %-----------------------------------------------------------------------------
@@ -51,7 +51,8 @@ For each of these algorithms, the input training data is formatted as a set of $
 \begin{equation}
     p_i = p(y_i|x_i;\beta) = \frac{1}{1+\exp-(\sum_{j=0}^{d} \beta_j\,x_{ij})}
 \end{equation}
-   
+
+
 \subsection{STOCHASTIC GRADIENT DESCENT}
 Our SGD implementation first randomized the order of input examples to avoid repeated computation of random numbers and partitioned the input data into $x_1 \ldots x_k$ \emph{training} examples and $x_{k+1} \ldots x_n$ \emph{validation} examples. Then sequential mini-batches of size $\kappa < k$ taken from the training set were used to update the parameter vector $\beta$ (initialized to all zero values) by the following equation. The constant $\mu$ quantifies the trade-off between maximizing likelihood and minimizing parameter values for $L_2$ Regularization.
 
@@ -85,15 +86,24 @@ optimization method used to find local extrema.
 
 
 
-
-
 %-----------------------------------------------------------------------------
 % DESIGN OF EXPERIMENTS
 %-----------------------------------------------------------------------------
 \section{DESIGN OF EXPERIMENTS}
 \label{sec:experiments}
 
-Vero adipisicing meh williamsburg keytar, trust fund pop-up pariatur. Dolore exercitation put a bird on it squid. Placeat wayfarers nesciunt, lomo typewriter officia ullamco vinyl irure pork belly seitan cred dreamcatcher fanny pack. Nostrud put a bird on it ea, 90's letterpress ennui wayfarers biodiesel fixie. Small batch fixie put a bird on it, ea pop-up lo-fi fingerstache umami quis you probably haven't heard of them tonx portland. Tonx direct trade neutra, 8-bit try-hard chambray banksy pinterest. Officia typewriter meggings VHS, hoodie stumptown eiusmod aesthetic quinoa cliche aliquip master cleanse 3 wolf moon.
+Design of experiments.
+
+\subsection{HYPERPARAMETERS}
+
+\subsubsection{Learning Rate}
+How did we determine $\lambda$ (the learning rate).
+
+\subsubsection{Regularization}
+How did we determine $\mu$ (the regularization constant).
+
+\subsubsection{SGD Subset}
+How did we determine (or why did we choose) the length of subsets used by the SGD (1 row at a time, 2 at a time, etc.)
 
 
 
@@ -103,25 +113,14 @@ Vero adipisicing meh williamsburg keytar, trust fund pop-up pariatur. Dolore exe
 \section{RESULTS OF EXPERIMENTS}
 \label{sec:results}
 
-Qui squid craft beer eiusmod. Brooklyn est nulla, id jean shorts whatever flexitarian chambray irure. Laboris art party veniam, squid ad gluten-free aliqua wolf cillum single-origin coffee culpa pork belly fingerstache. Nihil semiotics echo park esse, DIY readymade Austin meggings. Kale chips williamsburg intelligentsia ethnic, try-hard freegan blue bottle magna selfies. Carles qui blue bottle, godard authentic flexitarian cred tofu fugiat kogi letterpress art party adipisicing pinterest pickled. Farm-to-table blog plaid delectus irure.
+Results of experiments. Comparison of methods and data sets.
 
+\subsection{USPS-N}
+How did SGD and L-BFGS perform on the USPS-N data sets.
 
+\subsection{WEB}
+How did SGD and L-BFGS perform on the Web data sets.
 
-%-----------------------------------------------------------------------------
-% FINDINGS AND LESSONS LEARNED
-%-----------------------------------------------------------------------------
-\section{FINDINGS AND LESSONS LEARNED}
-\label{sec:conclusion}
-
-Qui squid craft beer eiusmod. Brooklyn est nulla, id jean shorts whatever flexitarian chambray irure. Laboris art party veniam, squid ad gluten-free aliqua wolf cillum single-origin coffee culpa pork belly fingerstache. Nihil semiotics echo park esse, DIY readymade Austin meggings. Kale chips williamsburg intelligentsia ethnic, try-hard freegan blue bottle magna selfies. Carles qui blue bottle, godard authentic flexitarian cred tofu fugiat kogi letterpress art party adipisicing pinterest pickled. Farm-to-table blog plaid delectus irure.
-
-
-
-
-%-----------------------------------------------------------------------------
-% OTHER
-%-----------------------------------------------------------------------------
-\subsection{CITATIONS, FIGURES, REFERENCES}
 
 \subsubsection{Figures} 
 
@@ -143,6 +142,16 @@ Soma             &Cell body (contains cell nucleus) \\
 \end{tabular}
 \end{center}
 \end{table}
+
+
+
+%-----------------------------------------------------------------------------
+% FINDINGS AND LESSONS LEARNED
+%-----------------------------------------------------------------------------
+\section{FINDINGS AND LESSONS LEARNED}
+\label{sec:conclusion}
+
+Findings and lessons learned.
 
 
 
