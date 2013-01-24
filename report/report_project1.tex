@@ -13,12 +13,9 @@ University of California, San Diego \\
 \maketitle
 
 
-\begin{abstract}
-The Abstract paragraph should be indented 1/2~inch (3~picas) on
-both left and right-hand margins. Use 10~point type, with a
-vertical spacing of 11~points. Two line spaces precede the Abstract.
-The Abstract must be limited to one paragraph.
-\end{abstract}
+%\begin{abstract}
+%The abstract still needs to be written. It should provide a brief summary of the studied problem and our methods. Also, it state our results with a concise explanation of their meaning (good and/or bad).
+%\end{abstract}
 
 
 % Headings:
@@ -86,16 +83,28 @@ After each update of $\beta$, absolute change in the objective $\widehat{\beta}$
 
 Convergence was reached when change in the objective reached a value less than $\omega$. Convergence was also reached if the total number of epochs was greater than $\varepsilon$. With this configuration, the time to run the SGD is O(nd).
 
-\subsubsection{Cross Validation}
+
+\subsubsection{Cross-Validation}
+SGD with cross-validation is represented by the following pseudo-code:
+\begin{enumerate}
+    \item Initialize all parameter values $\beta_j$
+    \item Initialize all conditional probabilities $p_i$
+    \item Initialize the objective function and its difference value
+    \item Randomly divide the example set into two groups: testing set of m rows and validation set of (n-m) rows
+    \item while(objective function difference $\geq$ theshold AND number of epochs $<$ maximum epochs allowed
+    \begin{enumerate}
+        \item Randomly pick a sample of s rows out of the testing set
+        \item Update $\beta_j$ for all features
+        \item Update the objective function
+    \end{enumerate}
+\end{enumerate}
+
+
+
 The algorithm was run ten times to generate 10 vectors of parameters. The ten vectors of parameters were averaged to calculate one vector with cross-validation. The result cross-validated vector was used to calculate the test error and its variance over all the instances. The test error was defined as the average value of the loss function:
 \begin{equation}
         \textrm{test error} = \sum_{i=1}^{n} -log(y_i | x_i ; \beta )
 \end{equation}
-
-
-
-
-
 
 
 \subsection{LIMITED-MEMORY BFGS}
