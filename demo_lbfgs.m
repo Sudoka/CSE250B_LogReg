@@ -8,31 +8,14 @@ load('data/Web_normalized.mat');
 
 
 %% Preprocess data
-x = data(1:10,1:end-1);
-y = data(1:10,end);
-
-% initialize
-nFeatures = size(x,2);
-B0 = zeros(1,nFeatures); % parameters
-
-% function handle
-fhandle = @(B) derivativeLCL(x,y,B);
-
-%% Test function
-%meanDLCL = derivativeLCL(x, y, B0)
-
-
-%% Setup L-BFGS
-options.Method = 'lbfgs';
-options.Dispaly = 'iter';
-options.MaxFunEvals = 1E3;
-
-% add minFunc directory to path
-addpath('minFunc');
-
+mTest = data(1:100,:);
+mValid= data(100:200,:);
+mu = 0.1;
 
 %% Run L-BFGS
-x = minFunc(fhandle,B0,options);
+addpath('minFunc');
+
+[V,T,Var] = LBFGS(mTest, mValid, mu);
 
 
 %% Plot results
