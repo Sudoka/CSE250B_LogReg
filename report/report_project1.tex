@@ -1,4 +1,26 @@
-\documentstyle[nips]{article}
+\documentclass[10pt]{article}
+
+% required packages
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+
+% margins
+\setlength{\headwidth}{6.40in}
+\pagestyle{fancy}
+\addtolength{\textwidth}{1in}
+\addtolength{\textheight}{1in}
+\addtolength{\evensidemargin}{0.5in}
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\topmargin}{-0.5in}
+
+
+% page headers
+\fancyhead{} 
+\fancyhead[LO,LE]{CSE 250B}
+\fancyhead[RO,RE]{Project 1}
+
+
 
 \title{Logistic Regression with L$_2$ Regularization}
 
@@ -28,7 +50,7 @@ University of California, San Diego \\
 %-----------------------------------------------------------------------------
 % INTRODUCTION
 %-----------------------------------------------------------------------------
-\section{INTRODUCTION}
+\section{Introduction}
 \label{sec:intro}
 
 Machine Learning (ML) is a sub-discipline of Artificial Intelligence (AI) that focuses on the development and analysis of methods that produce models from data. An often referenced example application of ML is email spam filtering, but there is a wide variety of real-world problems where ML has been successful used, from object detection using a Microsoft Kinect sensor \cite{Kinect} to forecasting of power output from a photovoltaic solar farm \cite{solar}.
@@ -42,10 +64,10 @@ In this paper we analyze logistic regressions capability for classification lear
 %-----------------------------------------------------------------------------
 % DESIGN OF ALGORITHMS
 %-----------------------------------------------------------------------------
-\section{DESIGN AND ANALYSIS OF ALGORITHMS}
+\section{Design and Analysis of Algorithms}
 \label{sec:algorithms}
 
-\subsection{LOGISTIC REGRESSION}
+\subsection{Logistic Regression}
 Given a set of real-valued features $x$ with binary labels $y$ (a training set), we can define logistic regression model as: 
 \begin{equation}
     p_i = p( y_i | x_i ; \beta )  = \frac{1}{1 + \textrm{exp}-[\sum_{j=0}^d \beta_j x_ij]}
@@ -64,7 +86,7 @@ and is maximized when its derivative with respect to each parameter $\beta_j$ is
 \end{equation}
 
 
-\subsection{L2 REGULARIZATION}
+\subsection{L$_2$ Regularization}
 In order to prevent overfitting of machine learning, a penalty was imposed to regulate the values of the parameters. A regularization constant $\mu$ was introduced into the LCL objective function:
 
 \begin{equation}
@@ -77,7 +99,7 @@ where $||\beta||_2^2$ is the $L_2$ norm of the parameter vector. With this revis
 \end{equation}
 
 
-\subsection{GRADIENT-BASED OPTIMIZATION}
+\subsection{Gradient-Based Optimization}
 To efficiently maximize LCL, two gradient-based optimization methods are used: SGD and L-BFGS. The SGD was coded from scratched in Matlab while we used the popular minFunc toolbox \cite{minFunc} for the L-BFGS. For each of these algorithms, the input training data is formatted as a set of $n$ examples ($x_1, \ldots , x_n$) where each $x_i$ is a real-valued vector of $d$ features. Each $x_i$ is correlated to a binary (Bernoulli) outcome $y_i$ by a global parameter vector $\beta$ of length $d+1$. 
 
 
@@ -124,7 +146,7 @@ Limited-memory Broyden-Fletcher-Goldfarb-Shannon (L-BFGS) is a quasi-Newton opti
 %-----------------------------------------------------------------------------
 % DESIGN OF EXPERIMENTS
 %-----------------------------------------------------------------------------
-\section{DESIGN OF EXPERIMENTS}
+\section{Design of Experiments}
 \label{sec:experiments}
 
 We apply logistic regression to two training data sets:
@@ -134,7 +156,7 @@ We apply logistic regression to two training data sets:
 \end{enumerate}
 
 
-\subsection{PRE-PROCESSING TRAINING DATA}
+\subsection{Pre-Processing Training Data}
 
 \subsubsection{USPS-N}
 The USPS-N data set consists of 10 tables, where each table has features and labels for one digit. We are only interested in digit 9 for this study, so we concat all 10 tables together into one training set, set the labels for all examples for digit 9 to 1 and set the labels for all other examples to 0 (i.e. only examples from digit 9 have positive labels). Also, features of this data set are RGB color values and so we normalize all features relative to the max RGB value (255).
@@ -143,24 +165,23 @@ The USPS-N data set consists of 10 tables, where each table has features and lab
 The Web data set has features with binary values, which are compatible with logistic regression. The only pre-processing required for the Web data set was removal of non-essential characters (e.g. colons).
 
 
-\subsection{HYPERPARAMETERS}
+\subsection{Hyperparameters}
 
 \subsubsection{Learning Rate}
-SGD uses a fixed learning rate $\lambda$ to control the change the change in LCL. We ran the SGD method using a range of $\lambda$ values over a 10\% subset of each training data set, using the test error of the SGD as a metric for determining which $\lambda$ is optimal.
+SGD uses a fixed learning rate $\lambda$ to control the change the change in LCL. We ran the SGD method using a range of $\lambda$ values over a 10\% subset of each training data set, using the test error of the SGD as a metric for determining which $\lambda$ is optimal. The optimal $\lambda$ for the USPS-N and Web training data sets was YYY and YYY.
 
 \subsubsection{Regularization}
-Once we determined an optimal $\lambda$, we tried a range of $\mu$ values with a randomly selected 30\% subset of each training data set. We selected $\mu$ such that the test error was minimized.
+Once we determined an optimal $\lambda$, we tried a range of $\mu$ values with a randomly selected 30\% subset of each training data set. We selected $\mu$ such that the test error was minimized, which was YYY and YYY for the USPS-N and Web training data sets.
 
 \subsubsection{Convergence}
 Convergence was reached when change in the objective function was less than $\omega$ or the total number of epochs was greater than $\varepsilon$ (which ever came first)
 
 
 
-
 %-----------------------------------------------------------------------------
 % RESULTS OF EXPERIMENTS
 %-----------------------------------------------------------------------------
-\section{RESULTS OF EXPERIMENTS}
+\section{Results of Experiments}
 \label{sec:results}
 
 Results of experiments. Comparison of methods and data sets.
@@ -172,33 +193,38 @@ How did SGD and L-BFGS perform on the USPS-N data sets.
 How did SGD and L-BFGS perform on the Web data sets.
 
 
-\subsubsection{Figures} 
 
-\begin{figure}[h]
-\vspace{1in}
-\caption{Comparison of SGD and L-BFGS for USPS-N (left) and Web (right) data sets.}
-\end{figure}
 
 \begin{table}[t]
-\caption{Hyperparameters.}
+\caption{Comparison of hyperparameters of SGD and their test error. $\lambda$ was evaluated using a 10\% subset of each training set with a fixed value of $\mu$ and the optimal $\lambda$ was chosen such that the test error was minimized. Once $\lambda$ was chosen, $\mu$ was varied to determine the $\mu$ that minimizes the test error.}
 \label{tab-hyperparameters}
 \begin{center}
-\begin{tabular}{lll}
-& $\lambda$  & $\mu$
+\begin{tabular}{l|ll}
+Training Set & $\lambda$  & $\mu$
 \\ \hline \\
-SGD & 1.0  & 1.0 \\
-SGD & 0.1  & 1.0 \\
-SGD & 0.01 & 1.0 \\
+USPS-N & 1.0  & 1.0 \\
+USPS-N & 1.0  & 1.0 \\
+USPS-N & 1.0  & 1.0 \\
+Web & 1.0  & 1.0 \\
+Web & 1.0  & 1.0 \\
+Web & 1.0  & 1.0 \\
 \end{tabular}
 \end{center}
 \end{table}
 
 
+\begin{figure}[h]
+\begin{center}
+    \includegraphics[width=1.0\textwidth]{test_error_example.png}
+    \caption{Comparison of SGD and L-BFGS for USPS-N (left) and Web (right) data sets.}
+\end{center}
+\end{figure}
+
 
 %-----------------------------------------------------------------------------
 % FINDINGS AND LESSONS LEARNED
 %-----------------------------------------------------------------------------
-\section{FINDINGS AND LESSONS LEARNED}
+\section{Findings and Lessons Learned}
 \label{sec:conclusion}
 
 Findings and lessons learned.
