@@ -36,7 +36,6 @@ The Abstract must be limited to one paragraph.
 
 This paper will attempt to recreate the results by \cite{t-logistic}.
 
-High life next level post-ironic cupidatat selvage, pour-over tousled Austin eu DIY wes anderson pitchfork. Ethnic you probably haven't heard of them keytar, jean shorts sustainable brunch freegan flannel eu pinterest. Organic labore est pariatur deserunt fap. Locavore ethical qui anim irony placeat, fashion axe thundercats cray do ea. Deserunt artisan gentrify disrupt officia. In truffaut polaroid sunt pour-over pinterest beard fixie laborum irony vegan pork belly. Wes anderson echo park non, selfies ut meh qui try-hard est bicycle rights.
 
 
 
@@ -45,9 +44,28 @@ High life next level post-ironic cupidatat selvage, pour-over tousled Austin eu 
 %-----------------------------------------------------------------------------
 \section{DESIGN AND ANALYSIS OF ALGORITHMS}
 \label{sec:algorithms}
+Stochastic gradient descent (SGD) and Limited-memory Broyden-Fletcher-Goldfarb-Shannon (L-BFGS) were each implemented in Matlab to maximize the total conditional log likelihood of each training data set. In brief, SGD incorporated a fixed learning rate $\lambda$ to control the change in log likelihood, which was averaged over random mini-batches of size $\kappa$. To control over-fitting, logistic regression was used and change in the objective function was evaluated on a separate validation dataset containing 30\% of all training examples selected at random. Convergence was reached when change in the objective function was less than $\omega$ or the total number of epochs was greater than $\varepsilon$ (which ever came first). (Add brief overview of L-BFGS and cite MinFunc's implementation)
 
-Real-valued features and binary labels (Bernoulli distribution).
+For each of these algorithms, the input training data is formatted as a set of $n$ examples $x_i \ldots x_n$ where each $x_j$ is a real-valued vector of $d$ features. Each $x_i$ is correlated to a binary (Bernoulli) outcome $y_i$ by a global parameter vector $\beta$ of length $d+1$. We assume this correlation follows the model below where $x_{i0}=1$ for all $i$.
 
+\begin{equation}
+    p_i = p(y_i|x_i;\beta) = \frac{1}{1+\exp-(\sum_{j=0}^{d} \beta_j\,x_{ij})}
+\end{equation}
+   
+\subsection{STOCHASTIC GRADIENT DESCENT}
+Our SGD implementation first randomized the order of input examples to avoid repeated computation of random numbers and partitioned the input data into $x_1 \ldots x_k$ \emph{training} examples and $x_{k+1} \ldots x_n$ \emph{validation} examples. Then sequential mini-batches of size $\kappa < k$ taken from the training set were used to update the parameter vector $\beta$ (initialized to all zero values) by the following equation. The constant $\mu$ quantifies the trade-off between maximizing likelihood and minimizing parameter values for $L_2$ Regularization.
+
+\begin{equation}
+    \beta = \beta + \frac{\lambda}{\kappa}\,[-2 \mu \beta + \sum_{i=1}^{\kappa} (y_i - p_i)\,x_i]
+\end{equation}
+
+After each update of $\beta$, absolute change in the objective $\widehat{\beta}$ was computed over all validation examples with the following function.
+
+\begin{equation}
+    \widehat{\beta} = \mu \|\beta\|_2 + \sum_{i=k+1}^{n}{-\log(p_i^{y_i}(1 - p_i)^{1-y_i})}
+\end{equation}
+
+Convergence was reached when change in the objective reached a value less than $\omega$. Convergence was also reached if the total number of epochs was greater than $\varepsilon$.
 
 \subsection{L2 REGULARIZATION}
 \begin{equation}
@@ -61,16 +79,12 @@ where $||\beta||_2^2$ is the $L_2$ norm of the parameter vector.
 \end{equation}
 
 
-\subsection{STOCHASTIC GRADIENT DESCENT}
-The update rule is
-\begin{equation}
-    \beta_j := \beta_j + \lambda (y-p)x_j
-\end{equation}
-
-
 \subsection{LIMITED-MEMORY BFGS}
 Limited-memory Broyden-Fletcher-Goldfarb-Shannon (L-BFGS) is a quasi-Newton
 optimization method used to find local extrema.
+
+
+
 
 
 %-----------------------------------------------------------------------------
