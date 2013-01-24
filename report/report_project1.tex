@@ -36,7 +36,7 @@ University of California, San Diego \\
 
 
 \begin{abstract}
-Logistic Regression with L$_2$ Regularization is analyzed as a classification learning method for data sets with real-valued features and binary labels. Stochastic Gradient Descent (SGD) and Limited-memory BFGS (L-BFGS) are used to find the regression parameters such that the Log Conditional Likelihood is maximized. The methods are applied to two common data sets: USPS-N (images of hand-written digits) and Web (statistics on HTML web pages). For the USPS-N data set, SGD had a (lower/equal/higher) test error than L-BFGS (xxx vs xxx) while for the Web data set, blah. These results indicate that blah blah blah about the two gradient methods as well as blah about logistic regression.
+Logistic Regression with L$_2$ Regularization is analyzed as a classification learning method for data sets with real-valued features and binary labels. Stochastic Gradient Descent (SGD) and Limited-memory BFGS (L-BFGS) are used to find the regression parameters such that the Log Conditional Likelihood is maximized. The methods are applied to two data sets: USPS-N (images of hand-written digits) and Web (statistics on HTML web pages). Logistic regression with SGD had a higher test error percentage than L-BFGS for both the USPS-N (5.32$\pm$3.23 vs 3.21$\pm$0.9) and Web data sets (8.75$\pm$4.3 vs 5.45$\pm$1.4).
 \end{abstract}
 
 
@@ -210,7 +210,7 @@ Web & 1.0  & 1.0 \\
 \begin{figure}[h]
 \begin{center}
     \includegraphics[width=1.0\textwidth]{test_error.pdf}
-    \caption{Comparison of SGD and L-BFGS for USPS-N (left) and Web (right) data sets.}
+    \caption{Comparison of test error from SGD (gray solid) and L-BFGS (light gray with hatches) for USPS-N and Web data sets. The error bars are $\pm$ one standard deviation.}
 \end{center}
 \end{figure}
 
