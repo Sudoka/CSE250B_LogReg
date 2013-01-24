@@ -44,13 +44,31 @@ Highlight what Logistic Regression, why is it used and where is it used (real-wo
 %-----------------------------------------------------------------------------
 \section{DESIGN AND ANALYSIS OF ALGORITHMS}
 \label{sec:algorithms}
+
 Stochastic gradient descent (SGD) and Limited-memory Broyden-Fletcher-Goldfarb-Shannon (L-BFGS) were each implemented in Matlab to maximize the total conditional log likelihood of each training data set. In brief, SGD incorporated a fixed learning rate $\lambda$ to control the change in log likelihood, which was averaged over random mini-batches of size $\kappa$. To control over-fitting, logistic regression was used and change in the objective function was evaluated on a separate validation dataset containing 30\% of all training examples selected at random. Convergence was reached when change in the objective function was less than $\omega$ or the total number of epochs was greater than $\varepsilon$ (which ever came first). (Add brief overview of L-BFGS and cite MinFunc's implementation)
+
+minFunc\cite{minFunc}
 
 For each of these algorithms, the input training data is formatted as a set of $n$ examples $x_i \ldots x_n$ where each $x_j$ is a real-valued vector of $d$ features. Each $x_i$ is correlated to a binary (Bernoulli) outcome $y_i$ by a global parameter vector $\beta$ of length $d+1$. We assume this correlation follows the model below where $x_{i0}=1$ for all $i$.
 
 \begin{equation}
     p_i = p(y_i|x_i;\beta) = \frac{1}{1+\exp-(\sum_{j=0}^{d} \beta_j\,x_{ij})}
 \end{equation}
+
+
+\subsection{L2 REGULARIZATION}
+In order to prevent overfitting of machine learning, a penalty was imposed to regulate the values of the parameters. A regularization constant $\mu$ was introduced into the LCL objective function:
+
+\begin{equation}
+    \hat{B} = \textrm{argmax}_{\beta} LCL - \mu||\beta||_2^2
+\end{equation}
+where $||\beta||_2^2$ is the $L_2$ norm of the parameter vector. With this revision the derivative of the LCL becomes:
+
+\begin{equation}
+    \frac{\partial}{\partial \beta_j} [ log p( y | x ; \beta) -\mu \sum_{j=0}^d \beta_j^2 ] = (y - p) x_j - 2 \mu \beta_j
+\end{equation}
+
+
 
 
 \subsection{STOCHASTIC GRADIENT DESCENT} 
@@ -76,16 +94,8 @@ The algorithm was run ten times to generate 10 vectors of parameters. The ten ve
 
 
 
-\subsection{L2 REGULARIZATION}
-\begin{equation}
-    \hat{B} = \textrm{argmax}_{\beta} LCL - \mu||\beta||_2^2
-\end{equation}
-where $||\beta||_2^2$ is the $L_2$ norm of the parameter vector.
 
 
-\begin{equation}
-    \frac{\partial}{\partial \beta_j} LCL = \sum_i (y_i - p_i)x_{ij}
-\end{equation}
 
 
 \subsection{LIMITED-MEMORY BFGS}
@@ -100,7 +110,16 @@ optimization method used to find local extrema.
 \section{DESIGN OF EXPERIMENTS}
 \label{sec:experiments}
 
-Design of experiments.
+\subsection{PRE-PROCESSING TRAINING DATA}
+normalization, concatation?
+
+\subsubsection{USPS-N}
+Digit 9 vs other digits
+
+\subsubsection{Web}
+anything special?
+
+
 
 \subsection{HYPERPARAMETERS}
 
@@ -110,8 +129,6 @@ How did we determine $\lambda$ (the learning rate).
 \subsubsection{Regularization}
 How did we determine $\mu$ (the regularization constant).
 
-\subsubsection{SGD Subset}
-How did we determine (or why did we choose) the length of subsets used by the SGD (1 row at a time, 2 at a time, etc.)
 
 
 
