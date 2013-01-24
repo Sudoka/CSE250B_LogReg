@@ -82,16 +82,16 @@ To efficiently maximize LCL, two gradient-based optimization methods are used: S
 
 
 \subsubsection{SGD} 
-Our SGD implementation first randomized the order of input examples to avoid repeated computation of random numbers and partitioned the input data into $x_1 \ldots x_k$ \emph{training} examples and $x_{k+1} \ldots x_n$ \emph{validation} examples. Then sequential mini-batches of size $\kappa < k$ taken from the training set were used to update the parameter vector $\beta$ (initialized to all zero values) by the following equation. The constant $\mu$ quantifies the trade-off between maximizing likelihood and minimizing parameter values for $L_2$ Regularization.
+Our SGD implementation first randomized the order of input examples to avoid repeated computation of random numbers and partitioned the input data into $x_1 \ldots x_k$ \emph{training} examples and $x_{k+1} \ldots x_n$ \emph{validation} examples. Then sequential mini-batches of size $\kappa < k$ taken from the training set were used to update the parameter vector $\beta$ (initialized to all zero values) by the following equation. The constant $\mu$ quantifies the trade-off between maximizing likelihood and minimizing parameter values for $L_2$ Regularization. The update rule for $\beta$ is:
 
 \begin{equation}
-    \beta := \beta + \frac{\lambda}{\kappa}\,[-2 \mu \beta + \sum_{i=1}^{\kappa} (y_i - p_i)\,x_i]
+    \beta := \beta + \frac{\lambda}{\kappa}\,[-2 \mu \beta + \sum_{i=1}^{\kappa} (y_i - p_i) x_i]
 \end{equation}
 
 After each update of $\beta$, absolute change in the objective $\widehat{\beta}$ was computed over all validation examples with the following function.
 
 \begin{equation}
-    \widehat{\beta} = \mu \|\beta\|_2 + \sum_{i=k+1}^{n}{-\log(p_i^{y_i}(1 - p_i)^{1-y_i})}
+    \widehat{\beta} = \mu \|\beta\|^2 + \sum_{i=k+1}^{n}{-\log(p_i^{y_i}(1 - p_i)^{1-y_i})}
 \end{equation}
 
 Convergence was reached when change in the objective reached a value less than $\omega$. Convergence was also reached if the total number of epochs was greater than $\varepsilon$. With this configuration, the time to run the SGD is O(nd).
@@ -140,15 +140,14 @@ anything special?
 
 \subsection{HYPERPARAMETERS}
 
-Stochastic gradient descent (SGD) and  were each implemented in Matlab to maximize the total conditional log likelihood of each training data set. In brief, SGD incorporated a fixed learning rate $\lambda$ to control the change in log likelihood, which was averaged over random mini-batches of size $\kappa$. To control over-fitting, logistic regression was used and change in the objective function was evaluated on a separate validation dataset containing 30\% of all training examples selected at random. Convergence was reached when change in the objective function was less than $\omega$ or the total number of epochs was greater than $\varepsilon$ (which ever came first). (Add brief overview of L-BFGS and cite MinFunc's implementation)
-
-
-
 \subsubsection{Learning Rate}
-How did we determine $\lambda$ (the learning rate).
+SGD uses a fixed learning rate $\lambda$ to control the change the change in LCL. We ran the SGD method using a range of $\lambda$ values over a 10\% subset of each training data set, using the test error of the SGD as a metric for determining which $\lambda$ is optimal.
 
 \subsubsection{Regularization}
-How did we determine $\mu$ (the regularization constant).
+Once we determined an optimal $\lambda$, we tried a range of $\mu$ values with a randomly selected 30\% subset of each training data set. We selected $\mu$ such that the test error was minimized.
+
+\subsubsection{Convergence}
+Convergence was reached when change in the objective function was less than $\omega$ or the total number of epochs was greater than $\varepsilon$ (which ever came first)
 
 
 
