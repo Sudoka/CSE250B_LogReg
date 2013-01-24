@@ -110,7 +110,7 @@ To improve the performance of the SGD, cross-validation was added. The pseudo-co
     \end{enumerate}
 \end{enumerate}
 
-The algorithm was run ten times to generate 10 vectors of parameters. The ten vectors of parameters were averaged to calculate one vector with cross-validation. The result cross-validated vector was used to calculate the test error and its variance over all the instances. The test error was defined as the average value of the loss function:
+The algorithm was run ten times to generate 10 vectors of parameters. The ten vectors of parameters were averaged to calculate one vector (10-fold cross-validation). The result cross-validated vector was used to calculate the test error and its variance over all the instances. The test error was defined as the average value of the loss function:
 \begin{equation}
         \textrm{test error} = \sum_{i=1}^{n} -log(y_i | x_i ; \beta )
 \end{equation}
@@ -127,15 +127,20 @@ Limited-memory Broyden-Fletcher-Goldfarb-Shannon (L-BFGS) is a quasi-Newton opti
 \section{DESIGN OF EXPERIMENTS}
 \label{sec:experiments}
 
+We apply logistic regression to two training data sets:
+\begin{enumerate}
+    \item USPS-N: images of hand-written digits as 256-dimensional vectors
+    \item Web: statistics on HTML web pages
+\end{enumerate}
+
+
 \subsection{PRE-PROCESSING TRAINING DATA}
-normalization, concatation?
 
 \subsubsection{USPS-N}
-Digit 9 vs other digits
+The USPS-N data set consists of 10 tables, where each table has features and labels for one digit. We are only interested in digit 9 for this study, so we concat all 10 tables together into one training set, set the labels for all examples for digit 9 to 1 and set the labels for all other examples to 0 (i.e. only examples from digit 9 have positive labels). Also, features of this data set are RGB color values and so we normalize all features relative to the max RGB value (255).
 
 \subsubsection{Web}
-anything special?
-
+The Web data set has features with binary values, which are compatible with logistic regression. The only pre-processing required for the Web data set was removal of non-essential characters (e.g. colons).
 
 
 \subsection{HYPERPARAMETERS}
