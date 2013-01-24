@@ -35,7 +35,7 @@ Machine Learning (ML) is a sub-discipline of Artificial Intelligence (AI) that f
 
 ML algorithms are plentiful in number, but some are more suitable than others depending on the type of problem. Logistic regression is a ML algorithm well-suited to problems involving a set of real-valued inputs and a binary (Bernoulli) output. A real-world example of such a problem is whether a baseball player will hit a home run based on a collection of statistics (e.g. batting average, height, weight). The statistics are the real-valued inputs, whether he hits a home run is the binary output (1=yes, 0=no), and the probability of whether a player hits a home run is the determined using logistic regression. 
 
-In this paper we analyze logistic regressions capability for classification learning using a previously study as a baseline \cite{t-logistic}. Aside from recreating the previous study's results, we also extend their work to comparing two gradient-based optimization methods for use in conjuction with the logistic regression.
+In this paper we analyze logistic regressions capability for classification learning using a previously study as a baseline \cite{t-logistic}. Aside from recreating the previous study's results, we also extend their work to comparing two gradient-based optimization methods for use in conjuction with the logistic regression: Stochastic Gradient Descent (SGD) and Limited-memory Broyden-Fletcher-Goldfarb-Shannon (L-BFGS).
 
 
 
@@ -45,7 +45,24 @@ In this paper we analyze logistic regressions capability for classification lear
 \section{DESIGN AND ANALYSIS OF ALGORITHMS}
 \label{sec:algorithms}
 
-Stochastic gradient descent (SGD) and Limited-memory Broyden-Fletcher-Goldfarb-Shannon (L-BFGS) were each implemented in Matlab to maximize the total conditional log likelihood of each training data set. In brief, SGD incorporated a fixed learning rate $\lambda$ to control the change in log likelihood, which was averaged over random mini-batches of size $\kappa$. To control over-fitting, logistic regression was used and change in the objective function was evaluated on a separate validation dataset containing 30\% of all training examples selected at random. Convergence was reached when change in the objective function was less than $\omega$ or the total number of epochs was greater than $\varepsilon$ (which ever came first). (Add brief overview of L-BFGS and cite MinFunc's implementation)
+\subsection{LOGISTIC REGRESSION}
+Given a set of real-valued features $x$ with binary labels $y$ (a training set), we can define logistic regression model as: 
+\begin{equation}
+    p( y | x ; \alpha , \beta )  = \frac{1}{1 + \textrm{exp}-[\sum_{j=0}^d \beta_j x_j]}
+\end{equation}
+where $d$ is the dimensionality of a training example, and $\beta_j$ are parameters of the regression. To learn the logistic regression, we need deteremine $\beta$ such that the Log Conditional Likelihood (LCL) is maximized. The LCL is defined as:
+\begin{equation}
+    \textrm{LCL} = \sum_{i:y_i=1} log p_i + \sum_{i:y_i=0} log (1-p_i)
+\end{equation}
+and is maximized when its derivative with respect to each parameter $\beta_j$ is zero. For a single example the partial derivative of the LCL is:
+\begin{equation}
+    \frac{\partial}{\partial \beta_j} log L(\beta ; x, y) = (y - p) x_j
+\end{equation}
+
+
+
+
+Stochastic gradient descent (SGD) and  were each implemented in Matlab to maximize the total conditional log likelihood of each training data set. In brief, SGD incorporated a fixed learning rate $\lambda$ to control the change in log likelihood, which was averaged over random mini-batches of size $\kappa$. To control over-fitting, logistic regression was used and change in the objective function was evaluated on a separate validation dataset containing 30\% of all training examples selected at random. Convergence was reached when change in the objective function was less than $\omega$ or the total number of epochs was greater than $\varepsilon$ (which ever came first). (Add brief overview of L-BFGS and cite MinFunc's implementation)
 
 minFunc\cite{minFunc}
 
